@@ -72,6 +72,9 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
         font-size: 16px;
     }
+    .brand-uppercase {
+    text-transform: uppercase;
+}
 </style>
 </head>
 <body>
@@ -90,13 +93,13 @@
             </div>
         </form>
         <form method="POST" action="/compare">
-            <table class="table table-striped mt-4">
+            <table class="table table-striped mt-4" >
                 <thead>
                     <tr>
                         <th>Compare</th>
-                        <th>ID</th>
                         <th>Brand</th>
                         <th>Model</th>
+                        <th>Processor</th>
                         <th>Price</th>
                         <th>Rating</th>
                 </thead>
@@ -104,11 +107,11 @@
                     {% for laptop in laptops %}
                     <tr>
                         <td><input type="checkbox" name="compare" value="{{ laptop.laptop_id }}"></td>
-                        <td>{{ laptop.laptop_id }}</td>
-                        <td>{{ laptop.brand }}</td>
+                        <td class="brand-uppercase">{{ laptop.brand }}</td>
                         <td>{{ laptop.model }}</td>
+                        <td class="brand-uppercase">{{ laptop.processor_brand }}</td>
                         <td>{{ laptop.price }}</td>
-                        <td>{{ laptop.rating }}</td>
+                        <td>{{ laptop.rating }}%</td>
                     </tr>
                     {% endfor %}
                 </tbody>

@@ -60,10 +60,8 @@ def login():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = generate_password_hash(request.form['password'])
-        conf_password = generate_password_hash(request.form['confirm_password'])
-        print(password)
-        print(conf_password)
+        password = request.form['password']
+        conf_password = request.form['confirm_password']
         email = request.form['email']
         user_type = request.form['user_type']
 
@@ -140,7 +138,24 @@ def compare():
 def admin():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM laptops")
+    base_query = "SELECT * FROM laptops WHERE 1=1"
+    query_params = []
+
+    if request.method == 'POST':
+        if request.form['brand']:
+            base_query += " AND brand LIKE %s ORDER BY brand ASC"
+            query_params.append('%' + request.form['brand'] + '%')
+        if request.form['model']:
+            base_query += " AND model LIKE %s ORDER BY model ASC"
+            query_params.append('%' + request.form['model'] + '%')
+        if request.form['processor']:
+            base_query += " AND processor_brand LIKE %s ORDER BY processor_brand ASC"
+            query_params.append('%' + request.form['processor'] + '%')
+        if request.form['max_price']:
+            base_query += " AND price <= %s ORDER BY price ASC"
+            query_params.append(request.form['max_price'])
+
+    cursor.execute(base_query, tuple(query_params))
     laptops = cursor.fetchall()
     cursor.close()
     conn.close()
